@@ -1,0 +1,7 @@
+{
+  "name": "logisk-platform-agent-kit",
+  "description": "Slash commands for developers of apps deployed on the Logiskbrist platform: /new-app, /list-apps, /onboard-app. Requires LOGISK_CUSTOMER_ORG and LOGISK_CUSTOMER_DOMAIN env vars set in the user's shell.",
+  "author": {
+    "name": "Logiskbrist"
+  }
+}
