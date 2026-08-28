@@ -11,6 +11,16 @@ description: Adopt an EXISTING repo onto the Logiskbrist platform without rewrit
 > `export LOGISK_CUSTOMER_ORG=…` and `export LOGISK_CUSTOMER_DOMAIN=…` to their
 > shell profile (`~/.zshrc` / `~/.bashrc`) so future sessions have them.
 
+> **Update check (do once per session):** if you haven't already this session, run
+> ```
+> LATEST=$(gh api repos/logiskbrist/logisk-platform-agent-kit/tags --jq '.[0].name' 2>/dev/null)
+> INSTALLED=$(cat "$CLAUDE_PLUGIN_ROOT"/VERSION 2>/dev/null || echo unknown)
+> ```
+> If `$LATEST` differs from `$INSTALLED` and neither is empty, tell the user
+> once: "Plugin update available: $LATEST (installed $INSTALLED). Run:
+> `claude plugin update logisk-platform-agent-kit`". Don't nag more than once
+> per conversation.
+
 # Onboard an existing app to the Logiskbrist platform
 
 ## What this skill does — and doesn't

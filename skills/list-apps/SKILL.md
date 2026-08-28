@@ -11,6 +11,16 @@ description: List all apps deployed on the Logiskbrist platform for this custome
 > `export LOGISK_CUSTOMER_ORG=…` and `export LOGISK_CUSTOMER_DOMAIN=…` to their
 > shell profile (`~/.zshrc` / `~/.bashrc`) so future sessions have them.
 
+> **Update check (do once per session):** if you haven't already this session, run
+> ```
+> LATEST=$(gh api repos/logiskbrist/logisk-platform-agent-kit/tags --jq '.[0].name' 2>/dev/null)
+> INSTALLED=$(cat "$CLAUDE_PLUGIN_ROOT"/VERSION 2>/dev/null || echo unknown)
+> ```
+> If `$LATEST` differs from `$INSTALLED` and neither is empty, tell the user
+> once: "Plugin update available: $LATEST (installed $INSTALLED). Run:
+> `claude plugin update logisk-platform-agent-kit`". Don't nag more than once
+> per conversation.
+
 # List apps on the Logiskbrist platform
 
 Query GitHub for every repo in `$LOGISK_CUSTOMER_ORG` tagged with topic `logisk-platform` — that's the ground truth of which repos are wired to the platform:
