@@ -31,7 +31,7 @@ You are helping a developer whose apps are deployed on Logiskbrist's managed AKS
 - **Domain**: `$LOGISK_CUSTOMER_DOMAIN`
 - **App template**: `logiskbrist/logisk-app-template`
 
-New apps deploy to `<name>.$LOGISK_CUSTOMER_DOMAIN` (prod) and `<branch-slug>-<name>.$LOGISK_CUSTOMER_DOMAIN` (a preview per PR/branch). The platform auto-discovers any repo in `$LOGISK_CUSTOMER_ORG` tagged with topic `logisk-platform` — that's the ONLY thing that makes an app real to the platform.
+New apps deploy to `<name>.$LOGISK_CUSTOMER_DOMAIN` (prod) and `<branch-slug>-<name>.$LOGISK_CUSTOMER_DOMAIN` (a preview per PR/branch, only when the PR carries the `preview` label). The platform auto-discovers any repo in `$LOGISK_CUSTOMER_ORG` tagged with topic `logisk-platform` — that's the ONLY thing that makes an app real to the platform.
 
 ## What the template is
 
@@ -164,7 +164,7 @@ Continue in the same session:
 1. **Create a feature branch**: `git checkout -b feature/initial-implementation`.
 2. **Read the repo's `CLAUDE.md`** — it prescribes stack, patterns, and platform invariants for this codebase.
 3. **Implement the app the user described.** Editing `app/page.tsx`, adding routes under `app/`, adding a database with Prisma if needed, wiring auth — all of it. This is the actual work.
-4. **Push commits to the feature branch as you go.** Each push produces a preview URL at `https://feature-initial-implementation-$APP.$LOGISK_CUSTOMER_DOMAIN/`. Use it to verify what you built actually works before assuming it does.
+4. **Push commits to the feature branch as you go**, and add the `preview` label to the auto-drafted PR as soon as it exists — that opts the PR into a preview environment. First push: wait ~10 s for `open-draft-pr` to fire, then `gh pr edit --add-label preview`. Every subsequent push updates the same preview at `https://feature-initial-implementation-$APP.$LOGISK_CUSTOMER_DOMAIN/`. Use it to verify what you built actually works before assuming it does.
 5. **Iterate until the app does what the user asked.** Broken previews are cheap; broken prod is not.
 
 Only after the preview URL renders a working version of what the user described do you stop and hand off. At that point tell the user:
@@ -200,5 +200,5 @@ Wait until the `build` workflow succeeds, then curl the prod URL. Expect an HTML
 
 - Do not edit `manifests/base/service.yaml`, `manifests/base/deployment.yaml`, or `manifests/base/external-secret.yaml` beyond the placeholder substitution above — the AppSet's preview patches depend on their exact shape.
 - Do not create the repo blank and copy files in — always use `--template`, otherwise `is_template=true` provenance is lost and template updates won't propagate.
-- Do not push directly to `main` for iteration — push a branch. Every branch push spawns a preview URL.
+- Do not push directly to `main` for iteration — push a branch, then add the `preview` label to the auto-drafted PR. That's what spawns the preview URL; a push alone without the label does not.
 - Do not swap Next.js for something else. The whole platform assumes Next.js.
